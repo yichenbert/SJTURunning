@@ -1,191 +1,60 @@
-# 🏃 SJTU Running
+# SJTU RUN · 路线工作台 1.0.0
 
-> 上海交通大学校园跑步自动化工具 —— 一键登录、轨迹生成、批量上传
+基于 [Gnonymous/SJTURunning](https://github.com/Gnonymous/SJTURunning) 整理的独立桌面版本，采用 Python 与 PySide6，保留上游 MIT 许可证。
 
-<p align="center">
-  <img src="assets/overview.png" width="350" alt="overview">
-</p>
+![主界面](packaging/1.0主界面.png)
 
----
+## 功能
 
-## ✨ 功能亮点
+- 浅色工作台：统一管理账号、日期、配速、路线及运行日志。
+- 地图路线编辑：点选、手绘、撤销、缩放与触控板平移。
+- 地图切换：OpenStreetMap 无需密钥；高德地图需自行配置 JS API Key 与安全密钥。
+- 本地路线库：保存、重命名、导入、导出和再次调用，原子写入保护已有数据。
+- 坐标转换：路线保存和导出使用 WGS84，高德显示及相关接口边界进行 GCJ-02 转换。
+- 保留上游登录、参数配置、轨迹采样和提交功能。接口响应成功不等同于学校认定有效成绩。
 
-| 功能 | 描述 |
-|------|------|
-| 🔐 **自动登录** | 支持 Jaccount 登录，自动识别验证码 |
-| 📍 **轨迹生成** | 基于真实校园路线生成 GPS 轨迹 |
-| 📅 **批量上传** | 支持多日记录一键上传 |
-| 🎲 **随机参数** | 支持随机距离、配速、时间，更自然 |
-| 🖥️ **图形界面** | 简洁直观的 GUI，无需命令行操作 |
-| 💻 **多平台支持** | 适配 Windows 和 macOS 系统 |
----
+## 下载与运行
 
-## 🚀 快速开始
+从 [Releases](https://github.com/yichenbert/SJTURunning/releases/latest) 下载对应平台的安装包，解压后运行。macOS 包面向 Apple Silicon（arm64），采用本地 ad-hoc 签名，未经 Apple 公证。Windows 包由 GitHub Actions 构建，发布页有对应附件时才表示可下载。
 
-### 方式一：直接下载（推荐）
+源码运行（Python 3.11）：
 
-前往 [**Releases 页面**](https://github.com/Gnonymous/SJTURunning/releases/latest) 下载适合您系统的版本：
-
-| 平台 | 下载文件 |
-|------|----------|
-| Windows | `SJTURunning-windows-vX.X.X.zip` |
-| macOS | `SJTURunning-macos-vX.X.X.zip` |
-
-解压后双击运行 `SJTURunning` 即可使用，无需安装 Python 环境。
-
-### 方式二：从源码运行
-
-```bash
-# 安装依赖
-pip install PySide6 requests tenacity
-
-# 启动程序
+```sh
+python -m venv .venv
+# macOS / Linux
+source .venv/bin/activate
+# Windows PowerShell 使用 .venv\Scripts\Activate.ps1
+pip install -r requirements.txt
 python qtui.py
 ```
 
-### 使用流程
+地图使用说明见 [地图路线使用说明](packaging/地图路线使用说明.md)、[高德配置](packaging/高德地图接入说明.md) 和 [路线库说明](packaging/坐标修正与路线库说明.md)。
 
-1. **输入账号密码** — 填写 Jaccount 用户名和密码
-2. **配置参数** — 设置日期、距离、配速等参数（**配置自动保存**）
-3. **开始上传** — 点击"一键跑步"，确认配置后等待完成
+## 隐私与配置
 
-> 💡 **提示**: 账号密码仅用于登录，不会保存到配置文件
+账号密码不会写入配置文件。高德密钥单独保存于本机地图设置文件，不随源码和安装包提供。路线、地图设置、缓存及旧安装包均不纳入版本提交。
 
----
+源码运行时配置位于项目目录；打包版位于 macOS 的 `~/Library/Application Support/SJTURunning` 或 Windows 的 `%APPDATA%\SJTURunning`。验证码识别沿用上游第三方服务，详细行为可查看 `src/login.py`。
 
-## ⚙️ 参数配置
+## 验证与构建
 
-工具支持两种模式配置日期和跑步参数：
-
-### 📅 日期设置
-
-| 模式 | 说明 | 适用场景 |
-|------|------|----------|
-| **指定日期模式** | 手动选择具体日期 | 补录特定日期的跑步记录 |
-| **天数模式** | 从今天往前推 N 天 | 批量补录最近几天记录 |
-
-### 🏃 跑步参数
-
-| 参数 | 固定模式 | 随机模式 |
-|------|----------|----------|
-| **距离** | 使用 `每日距离_米` | 在 `距离最小_米` ~ `距离最大_米` 之间随机 |
-| **配速** | 使用 `配速_分钟每公里` | 在 `配速最小_分钟每公里` ~ `配速最大_分钟每公里` 之间随机 |
-| **时间** | 使用 `固定跑步时间_时/分` | 在 `随机时间范围_开始时` ~ `随机时间范围_结束时` 之间随机 |
-
-### 📄 配置文件示例 (`config.json`)
-
-```json
-{
-    "指定日期模式": true,
-    "指定日期列表": ["2025-01-15", "2025-01-16"],
-    "跑步天数": 7,
-    "参数随机": true,
-    "每日距离_米": 3000,
-    "配速_分钟每公里": 5.0,
-    "距离最小_米": 2500,
-    "距离最大_米": 4000,
-    "配速最小_分钟每公里": 4.5,
-    "配速最大_分钟每公里": 6.5,
-    "GPS采样间隔_秒": 3,
-    "跑步时间随机": true,
-    "固定跑步时间_时": 8,
-    "固定跑步时间_分": 0,
-    "随机时间范围_开始时": 7,
-    "随机时间范围_结束时": 20,
-    "起点纬度": 31.031599,
-    "起点经度": 121.442938,
-    "终点纬度": 31.0264,
-    "终点经度": 121.4551
-}
+```sh
+python -m unittest discover -s tests -v
+pip install pyinstaller
+python -m PyInstaller --noconfirm --clean packaging/SJTURunning.spec
 ```
 
----
+本地 43 项离线单元与 GUI 事件测试通过。测试涉及坐标转换、路线采样、地图交互、配置和路线库；未验证真实账号登录、真实提交、高德在线鉴权或成绩认定。详见 [验证结果](packaging/验证结果.md)。macOS 本机重建可运行 `packaging/build-macos.sh`。
 
-## 📁 项目结构
+## 源码参考与作者
 
-```
-SJTURunning/
-├── qtui.py              # 🖥️ GUI 主程序入口
-├── config.json          # ⚙️ 配置文件
-├── src/
-│   ├── main.py          # 核心业务逻辑
-│   ├── login.py         # Jaccount 登录模块
-│   ├── api_client.py    # API 请求封装
-│   ├── data_generator.py# GPS 轨迹生成
-│   └── config.py        # 配置加载模块
-├── utils/               # 工具函数
-└── assets/              # 资源文件（图片等）
-```
+根据上游 README 的作者署名：
 
----
+- 原作者：[Labyrinth0419](https://github.com/Labyrinth0419)
+- 二改优化：[accelerator-s](https://github.com/accelerator-s)
+- 三改维护及本版直接参考仓库：[Gnonymous](https://github.com/Gnonymous) / [SJTURunning](https://github.com/Gnonymous/SJTURunning)
+- 本版整理与发布：[yichenbert](https://github.com/yichenbert)
 
-## ⚠️ 注意事项
+参考基础提交：`9938d0d58569eaa3a9c3ede8bb85780bf73140de`（上游 2.1.1）。本仓库将本地界面与地图改动整合为独立发行版 **1.0.0**，版本序列与上游分别维护。
 
-| 类型 | 说明 |
-|------|------|
-| 🚫 **配速限制** | 服务器配速校验范围通常为 3-9 分钟/公里 |
-| 📆 **日期限制** | 不要提交未来日期的记录 |
-| ⏱️ **频率限制** | 避免短时间内多次提交，建议间隔操作 |
-
----
-
-## 🔒 安全与隐私
-
-- ✅ 账号密码仅用于获取登录凭证，**不会保存**
-- ⚡ 验证码识别使用 `https://geek.sjtu.edu.cn/captcha-solver/`
-- 🔧 如需更高隐私性，可自行替换验证码识别服务
-
----
-
-## ❓ 常见问题
-
-<details>
-<summary><b>登录失败怎么办？</b></summary>
-
-- 检查账号密码是否正确
-- 确认网络连接正常
-- 验证码识别服务可能暂时不可用，稍后重试
-</details>
-
-<details>
-<summary><b>上传失败怎么办？</b></summary>
-
-- 检查网络连接
-- 可能是服务端限制，稍后重试
-- 检查参数是否在合理范围内（如配速、距离）
-</details>
-
-<details>
-<summary><b>如何设置起点和终点？</b></summary>
-
-配置文件中的 `起点纬度/经度` 和 `终点纬度/经度` 定义了跑步轨迹的起终点坐标。默认设置为闵行校区内的位置。
-</details>
-
-<details>
-<summary><b>为什么没有按照我填写的参数生成轨迹？</b></summary>
-
-- 配置会在修改后自动保存，请确认参数已正确填写
-- 可自行查看`config.json`文件中的参数是否正确更新
-</details>
-
----
-
-## 🤝 鸣谢
-
-感谢历代交大开发者的贡献：
-
-- **原作者**：[Labyrinth0419](https://github.com/Labyrinth0419)
-- **二改优化**：[accelerator-s](https://github.com/accelerator-s)
-- **三改维护**：[Gnonymous (me)](https://github.com/Gnonymous)（更多自定义选项及多平台支持）
-
----
-
-## 📜 免责声明
-
-本工具仅供学习与研究使用，请遵守学校相关规定。使用本工具产生的一切后果由使用者自行承担。
-
----
-
-<p align="center">
-  <b>版本 2.1.0</b> · Made with ❤️ for SJTUer
-</p>
+采用 [MIT License](LICENSE)，保留原许可证的 Copyright (c) 2025 Yuhan Guo丨Eohan。请遵守学校及服务平台的相关规定。

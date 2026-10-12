@@ -72,7 +72,9 @@ def run_sports_upload(config, progress_callback=None, log_cb=None, stop_check_cb
         log_output("\n步骤 3/3: 上传跑步数据...", callback=log_cb)
         
         # 从配置文件读取参数
-        app_config = load_config()
+        app_config = config.get("APP_CONFIG")
+        if app_config is None:
+            app_config = load_config()
         use_specific_dates = app_config.get("指定日期模式", False)
         specific_dates = app_config.get("指定日期列表", [])
         total_runs = app_config.get("跑步天数", 25)

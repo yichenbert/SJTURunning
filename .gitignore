@@ -9,3 +9,19 @@ dist/
 
 SJTU Sports Uploader.spec
 .DS_Store
+
+.venv/
+packaging/build-macos.log
+map-cache/
+packaging/*tests.log
+
+map-settings.json
+map-settings.tmp
+
+routes.json
+.routes-*.tmp
+
+# Local release artifacts and personal route exports
+release/
+路线/
+packaging/*.log

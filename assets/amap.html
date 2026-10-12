@@ -1,0 +1,54 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<style>html,body,#map{height:100%;width:100%;margin:0;background:#edf2f3;font-family:-apple-system,sans-serif}#notice{position:absolute;top:16px;left:16px;right:16px;padding:16px;background:#fff;border-radius:12px;color:#33485b;z-index:200;box-shadow:0 2px 12px #152a3610;font-size:14px}.node{width:10px;height:10px;background:white;border:2px solid #087f83;border-radius:50%}.endpoint{width:24px;height:24px;border:2px solid white;border-radius:50%;background:#087f83;color:white;text-align:center;line-height:24px;font-size:12px}.end{background:#c08634}</style>
+<script src="qrc:///qtwebchannel/qwebchannel.js"></script></head><body><div id="map"></div><div id="notice">正在连接高德地图…</div>
+<script>
+'use strict';
+let map, bridge, config, points=[], mode='click', line, markers=[], drawing=false, frame=0, loaded=false;
+const notice=document.getElementById('notice');
+function fail(){if(loaded)return;notice.textContent='高德地图未能加载。请在「地图来源」检查 Key、安全密钥和域名白名单，然后重试。';bridge.status('failed');}
+function draw(){
+  if(!map)return;
+  line.setPath(points);
+  markers.forEach(m=>map.remove(m));markers=[];
+  if(drawing)return;
+  const add=(i,content,drag)=>{
+    const m=new AMap.Marker({position:points[i],content,anchor:'center',draggable:drag,bubble:false});
+    map.add(m);markers.push(m);
+    if(drag)m.on('dragend',e=>{points[i]=[e.lnglat.lng,e.lnglat.lat];commit();});
+  };
+  if(mode==='click'){
+    const stride=Math.max(1,Math.ceil(points.length/80));
+    for(let i=1;i<points.length-1;i+=stride)add(i,'<div class="node"></div>',true);
+  }
+  if(points.length){add(0,'<div class="endpoint">起</div>',mode==='click');if(points.length>1)add(points.length-1,'<div class="endpoint end">终</div>',mode==='click');}
+}
+function schedule(){if(!frame)frame=requestAnimationFrame(()=>{frame=0;draw();});}
+function commit(){bridge.commit(JSON.stringify(points));schedule();}
+function push(p){if(points.length>=5000){bridge.status('limit');return false;}points.push([p.lng,p.lat]);return true;}
+function finish(){if(!drawing)return;drawing=false;commit();}
+function setMode(value){finish();mode=value;if(map){map.setStatus({dragEnable:mode!=='freehand',doubleClickZoom:false});map.setDefaultCursor(mode==='pan'?'grab':'crosshair');schedule();}}
+window.editor={snapshot(){finish();return JSON.stringify(points);},setRoute(value){points=value;drawing=false;schedule();},setMode,
+ fit(){if(points.length)map.setFitView([line],false,[65,65,65,65],18);},
+ campus(){map.setZoomAndCenter(16,config.center);},zoom(delta){map.setZoom(Math.max(3,Math.min(20,map.getZoom()+delta)));}};
+function start(){
+ try{
+  map=new AMap.Map('map',{viewMode:'2D',zoom:16,center:config.center,resizeEnable:true,showLabel:true,doubleClickZoom:false});
+  line=new AMap.Polyline({path:points,strokeColor:'#087f83',strokeWeight:5,borderWeight:2,isOutline:true,outlineColor:'white',lineJoin:'round',lineCap:'round',bubble:true});
+  map.add(line);setMode(mode);draw();if(points.length)window.editor.fit();
+  map.on('complete',()=>{loaded=true;notice.hidden=true;bridge.ready();});
+  map.on('click',e=>{if(mode==='click'&&push(e.lnglat))commit();});
+  map.on('mousedown',e=>{if(mode!=='freehand'||(e.originEvent&&e.originEvent.button!==0))return;drawing=true;push(e.lnglat);schedule();});
+  map.on('mousemove',e=>{if(!drawing)return;const last=points[points.length-1];const a=last&&map.lngLatToContainer(last),b=map.lngLatToContainer(e.lnglat);if(!a||Math.hypot(a.getX()-b.getX(),a.getY()-b.getY())>=4){push(e.lnglat);schedule();}});
+  map.on('mouseup',finish);document.addEventListener('mouseup',finish);window.addEventListener('blur',finish);
+ }catch(e){fail();}
+}
+new QWebChannel(qt.webChannelTransport,channel=>{
+ bridge=channel.objects.bridge;
+ bridge.bootstrap(raw=>{
+  config=JSON.parse(raw);points=config.points;mode=config.mode;
+  window._AMapSecurityConfig={securityJsCode:config.security_code};
+  const script=document.createElement('script');script.src='https://webapi.amap.com/maps?v=2.0&key='+encodeURIComponent(config.key);script.onload=start;script.onerror=fail;document.head.appendChild(script);
+  setTimeout(fail,25000);
+ });
+});
+</script></body></html>

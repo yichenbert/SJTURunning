@@ -3,7 +3,7 @@ import os
 import shutil
 import sys
 
-global_version = "2.1.1"
+global_version = "1.0.0"
 
 APP_NAME = "SJTURunning"
 
@@ -66,6 +66,9 @@ def load_config():
     
     # 默认配置
     default_config = {
+        "使用自定义路线": False,
+        "路线名称": "我的路线",
+        "自定义路线": [],
         "指定日期模式": False,
         "指定日期列表": [],
         "跑步天数": 25,

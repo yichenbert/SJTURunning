@@ -1,6 +1,7 @@
 import requests
 import json
 from urllib.parse import quote
+from src.coordinates import service_coordinate, service_payload
 from utils.auxiliary_util import log_output, SportsUploaderError
 
 def make_request(method, url, headers, params=None, data=None, log_cb=None, stop_check_cb=None, session=None):
@@ -110,8 +111,9 @@ def get_authorization_token_and_rules(config, log_cb=None, stop_check_cb=None):
         log_output("任务被请求停止，正在退出...", "warning", log_cb)
         raise SportsUploaderError("任务已停止。")
 
-    formatted_lon_for_param = f"{config['START_LONGITUDE']:.14f}"
-    formatted_lat_for_param = f"{config['START_LATITUDE']:.14f}"
+    service_lat, service_lon = service_coordinate(config, config["START_LATITUDE"], config["START_LONGITUDE"])
+    formatted_lon_for_param = f"{service_lon:.14f}"
+    formatted_lat_for_param = f"{service_lat:.14f}"
     current_location_param = f"{formatted_lon_for_param},{formatted_lat_for_param}"
 
     referer_url_for_point_rule = f"{config['POINT_RULE_URL']}?location={quote(current_location_param, safe='')}"
@@ -162,7 +164,7 @@ def upload_running_data(config, auth_token, running_data, log_cb=None, stop_chec
         'POST',
         config["UPLOAD_URL"],
         headers,
-        data=json.dumps(running_data),
+        data=json.dumps(service_payload(config, running_data)),
         log_cb=log_cb,
         stop_check_cb=stop_check_cb,
         session=config.get("SESSION")
