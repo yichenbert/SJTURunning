@@ -95,7 +95,7 @@ class RouteEditorTests(unittest.TestCase):
         ui.route_name = '保存测试'
         ui.route_enabled.setChecked(True)
         ui._auto_save_config()
-        saved = json.loads(self.config_path.read_text())
+        saved = json.loads(self.config_path.read_text(encoding='utf-8'))
         self.assertEqual(saved['自定义路线'], ui.route_points)
         self.assertNotIn('PASSWORD', saved)
         restored = SportsUploaderUI()
@@ -213,7 +213,7 @@ class RouteEditorTests(unittest.TestCase):
         self.assertEqual(ui.route_points, points)
         self.assertEqual(ui.route_name, '保存后调用')
         self.assertTrue(ui.route_enabled.isChecked())
-        self.assertEqual(json.loads(self.config_path.read_text())['自定义路线'], points)
+        self.assertEqual(json.loads(self.config_path.read_text(encoding='utf-8'))['自定义路线'], points)
 
     def test_switching_provider_preserves_route_history_and_reports_actual_load_state(self):
         class OfflineAMap(RouteMap):
