@@ -1,0 +1,12 @@
+.git
+.venv
+build
+dist
+release
+map-cache
+map-settings.json
+routes.json
+config.json
+路线
+**/__pycache__
+*.log

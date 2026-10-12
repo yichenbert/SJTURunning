@@ -1,0 +1,4 @@
+# Replace this with your own domain; Caddy manages HTTPS certificates.
+sjtu-run.example.com {
+    reverse_proxy 127.0.0.1:8765
+}

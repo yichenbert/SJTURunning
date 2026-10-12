@@ -1,5 +1,12 @@
 # 更新记录
 
+## Web 1.0.0 — 2026-10-12
+
+- 增加适配手机与电脑的 Web 路线工作台及 GitHub Pages 自动发布。
+- 支持地图编辑、路线库、JSON / GPX 导出、桌面版配置导出及数据备份。
+- 提供可选的 Python 配套服务：登录、后台任务、日志与停止接口。
+- Web 首版使用 OpenStreetMap；GitHub Pages 前端需要连接独立 HTTPS 服务才能登录与提交。
+
 ## 1.0.0 — 2026-10-12
 
 首次独立发行，基于 Gnonymous/SJTURunning 的 9938d0d 提交。

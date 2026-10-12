@@ -25,3 +25,6 @@ routes.json
 release/
 路线/
 packaging/*.log
+
+.web-venv/
+web/artifacts/

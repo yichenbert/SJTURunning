@@ -13,6 +13,10 @@
 - 坐标转换：路线保存和导出使用 WGS84，高德显示及相关接口边界进行 GCJ-02 转换。
 - 保留上游登录、参数配置、轨迹采样和提交功能。接口响应成功不等同于学校认定有效成绩。
 
+## Web 版
+
+手机与电脑可打开 [Web 路线工作台](https://yichenbert.github.io/SJTURunning/)，直接绘制、管理和导出路线。登录与提交需连接你部署的 Python 服务，GitHub Pages 本身仅托管前端。详见 [Web 版说明](web/README.md)。
+
 ## 下载与运行
 
 从 [Releases](https://github.com/yichenbert/SJTURunning/releases/latest) 下载对应平台的安装包，解压后运行。macOS 包面向 Apple Silicon（arm64），采用本地 ad-hoc 签名，未经 Apple 公证。Windows 包由 GitHub Actions 构建，发布页有对应附件时才表示可下载。

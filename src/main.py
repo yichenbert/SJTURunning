@@ -1,6 +1,7 @@
 import time
 import datetime
 import random
+from zoneinfo import ZoneInfo
 from src.api_client import get_authorization_token_and_rules, upload_running_data
 from src.data_generator import generate_running_data_payload
 from src.config import load_config
@@ -88,7 +89,8 @@ def run_sports_upload(config, progress_callback=None, log_cb=None, stop_check_cb
         fail_count = 0
 
         # 计算日期列表
-        now = datetime.datetime.now()
+        timezone = ZoneInfo(config["TIMEZONE"]) if config.get("TIMEZONE") else None
+        now = datetime.datetime.now(timezone)
         start_times = []
         
         if use_specific_dates and specific_dates:
@@ -97,7 +99,7 @@ def run_sports_upload(config, progress_callback=None, log_cb=None, stop_check_cb
             for date_str in specific_dates:
                 try:
                     # 解析日期字符串 (格式: YYYY-MM-DD)
-                    day = datetime.datetime.strptime(date_str, "%Y-%m-%d")
+                    day = datetime.datetime.strptime(date_str, "%Y-%m-%d").replace(tzinfo=timezone)
                     if use_random_time:
                         rand_hour = random.randint(random_start_hour, random_end_hour)
                         rand_minute = random.randint(0, 59)
