@@ -12,7 +12,7 @@ jobs:
       matrix:
         include:
           - os: windows-latest
-            artifact: SJTURunning-windows-x64
+            artifact: SJTURunPlus-windows-x64
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -31,9 +31,9 @@ jobs:
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
-          Copy-Item LICENSE dist/SJTURunning/LICENSE.txt
-          Copy-Item README.md dist/SJTURunning/README.md
-          Compress-Archive -Path dist/SJTURunning -DestinationPath '${{ matrix.artifact }}-${{ github.ref_name }}.zip'
+          Copy-Item LICENSE dist/SJTURunPlus/LICENSE.txt
+          Copy-Item README.md dist/SJTURunPlus/README.md
+          Compress-Archive -Path dist/SJTURunPlus -DestinationPath '${{ matrix.artifact }}-${{ github.ref_name }}.zip'
       - uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.artifact }}
@@ -54,7 +54,7 @@ jobs:
         run: cd artifacts && sha256sum *.zip > SHA256SUMS-windows.txt
       - uses: softprops/action-gh-release@v2
         with:
-          name: SJTU RUN 1.0.0
+          name: SJTURunPlus ${{ github.ref_name }}
           body_path: packaging/RELEASE_NOTES.md
           files: artifacts/*
           draft: false

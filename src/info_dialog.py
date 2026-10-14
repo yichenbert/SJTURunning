@@ -33,7 +33,7 @@ class Ui_HelpWindow(object):
         HelpWindow.resize(415, 218)
         HelpWindow.setMinimumSize(QSize(415, 218))
         HelpWindow.setMaximumSize(QSize(415, 218))
-        HelpWindow.setWindowIcon(QIcon(os.path.join(RESOURCES_FULL_PATH, "SJTURM.png")))
+        HelpWindow.setWindowIcon(QIcon(os.path.join(RESOURCES_FULL_PATH, "SJTURunPlus.png")))
         HelpWindow.setStyleSheet(u"/* 感谢语标签样式 */\n"
 "#thankYouLabel {\n"
 "	color: #2980b9; /* 醒目的彼得里弗蓝色 */\n"

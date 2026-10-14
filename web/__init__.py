@@ -1,1 +1,1 @@
-"""Cross-platform web companion for SJTU RUN."""
+"""Cross-platform web companion for SJTURunPlus."""

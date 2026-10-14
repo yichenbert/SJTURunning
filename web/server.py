@@ -21,9 +21,9 @@ from src import login
 from src.main import run_sports_upload
 from utils.auxiliary_util import SportsUploaderError
 
-VERSION = '1.0.0'
+VERSION = '1.1.0'
 STATIC = Path(__file__).parent / 'static'
-ALLOWED_FILES = {'index.html', 'style.css', 'app.mjs', 'core.mjs', 'icon.svg', 'manifest.webmanifest', 'sw.js', 'LICENSE.txt'}
+ALLOWED_FILES = {'index.html', 'style.css', 'app.mjs', 'core.mjs', 'icon.svg', 'icon.png', 'icon-192.png', 'icon-512.png', 'manifest.webmanifest', 'sw.js', 'LICENSE.txt'}
 MIME = {'.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.mjs': 'text/javascript; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.svg': 'image/svg+xml', '.webmanifest': 'application/manifest+json'}
 
 
@@ -292,7 +292,7 @@ class Handler(BaseHTTPRequestHandler):
 
 
 def main():
-    parser = argparse.ArgumentParser(description='SJTU RUN Web companion server')
+    parser = argparse.ArgumentParser(description='SJTURunPlus Web companion server')
     parser.add_argument('--host', default='127.0.0.1')
     parser.add_argument('--port', type=int, default=8765)
     parser.add_argument('--allow-origin', action='append', default=['https://yichenbert.github.io'])
@@ -301,7 +301,7 @@ def main():
     if len(token) < 24:
         parser.error('请设置至少 24 字符的 SJTU_WEB_TOKEN 环境变量。')
     server = WebServer((args.host, args.port), token, args.allow_origin)
-    print(f'SJTU RUN Web {VERSION}: http://{args.host}:{server.server_port}', flush=True)
+    print(f'SJTURunPlus Web {VERSION}: http://{args.host}:{server.server_port}', flush=True)
     print('服务访问密钥已从环境变量读取；公开部署请使用 HTTPS 反向代理。', flush=True)
     try:
         server.serve_forever()

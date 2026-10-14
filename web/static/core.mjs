@@ -1,4 +1,4 @@
-export const VERSION = '1.0.0';
+export const VERSION = '1.1.0';
 export function normalizeRoute(points) {
   if (!Array.isArray(points) || points.length > 5000) throw Error('路线最多支持 5000 个点。');
   const result = [];
@@ -59,5 +59,5 @@ export function toAppConfig(route, settings) {
 export function xmlEscape(s) {return String(s).replace(/[<>&"']/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&apos;'}[c]));}
 export function toGPX(route) {
   const points=validateRoute(route.points);
-  return `<?xml version="1.0" encoding="UTF-8"?><gpx version="1.1" creator="SJTU RUN Web" xmlns="http://www.topografix.com/GPX/1/1"><trk><name>${xmlEscape(route.name)}</name><trkseg>${points.map(p=>`<trkpt lat="${p.latitude}" lon="${p.longitude}"/>`).join('')}</trkseg></trk></gpx>`;
+  return `<?xml version="1.0" encoding="UTF-8"?><gpx version="1.1" creator="SJTURunPlus Web" xmlns="http://www.topografix.com/GPX/1/1"><trk><name>${xmlEscape(route.name)}</name><trkseg>${points.map(p=>`<trkpt lat="${p.latitude}" lon="${p.longitude}"/>`).join('')}</trkseg></trk></gpx>`;
 }

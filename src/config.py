@@ -3,9 +3,11 @@ import os
 import shutil
 import sys
 
-global_version = "1.0.0"
+global_version = "1.1.0"
 
-APP_NAME = "SJTURunning"
+APP_NAME = "SJTURunPlus"
+# Retain the existing data directory so upgrades preserve settings and routes.
+APP_DATA_NAME = "SJTURunning"
 
 def _is_frozen():
     """是否运行于 PyInstaller 等打包环境。"""
@@ -19,7 +21,7 @@ def _user_config_dir():
         base = os.path.join(os.path.expanduser("~"), "Library", "Application Support")
     else:
         base = os.environ.get("XDG_CONFIG_HOME") or os.path.join(os.path.expanduser("~"), ".config")
-    return os.path.join(base, APP_NAME)
+    return os.path.join(base, APP_DATA_NAME)
 
 def _project_config_path():
     """源码运行时的配置路径(项目根目录)。"""
@@ -44,7 +46,7 @@ def get_config_path():
     except OSError:
         # 极端情况下用户目录不可写,退回临时目录,至少本次运行可用
         import tempfile
-        config_dir = os.path.join(tempfile.gettempdir(), APP_NAME)
+        config_dir = os.path.join(tempfile.gettempdir(), APP_DATA_NAME)
         os.makedirs(config_dir, exist_ok=True)
 
     config_path = os.path.join(config_dir, "config.json")

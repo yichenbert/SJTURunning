@@ -1,8 +1,10 @@
-# SJTU RUN · 路线工作台 1.0.0
+# SJTURunPlus · 路线工作台 1.1.0
+
+# **你跑不过我你信吗**
 
 基于 [Gnonymous/SJTURunning](https://github.com/Gnonymous/SJTURunning) 整理的独立桌面版本，采用 Python 与 PySide6，保留上游 MIT 许可证。
 
-![主界面](packaging/1.0主界面.png)
+![主界面](packaging/1.1主界面.png)
 
 ## 功能
 
@@ -38,7 +40,7 @@ python qtui.py
 
 账号密码不会写入配置文件。高德密钥单独保存于本机地图设置文件，不随源码和安装包提供。路线、地图设置、缓存及旧安装包均不纳入版本提交。
 
-源码运行时配置位于项目目录；打包版位于 macOS 的 `~/Library/Application Support/SJTURunning` 或 Windows 的 `%APPDATA%\SJTURunning`。验证码识别沿用上游第三方服务，详细行为可查看 `src/login.py`。
+为兼容升级，改名后继续使用原有配置目录。源码运行时配置位于项目目录；打包版位于 macOS 的 `~/Library/Application Support/SJTURunning` 或 Windows 的 `%APPDATA%\SJTURunning`。验证码识别沿用上游第三方服务，详细行为可查看 `src/login.py`。
 
 ## 验证与构建
 
@@ -59,6 +61,6 @@ python -m PyInstaller --noconfirm --clean packaging/SJTURunning.spec
 - 三改维护及本版直接参考仓库：[Gnonymous](https://github.com/Gnonymous) / [SJTURunning](https://github.com/Gnonymous/SJTURunning)
 - 本版整理与发布：[yichenbert](https://github.com/yichenbert)
 
-参考基础提交：`9938d0d58569eaa3a9c3ede8bb85780bf73140de`（上游 2.1.1）。本仓库将本地界面与地图改动整合为独立发行版 **1.0.0**，版本序列与上游分别维护。
+参考基础提交：`9938d0d58569eaa3a9c3ede8bb85780bf73140de`（上游 2.1.1）。本仓库将本地界面与地图改动整合为独立发行版 **1.1.0**，版本序列与上游分别维护。
 
 采用 [MIT License](LICENSE)，保留原许可证的 Copyright (c) 2025 Yuhan Guo丨Eohan。请遵守学校及服务平台的相关规定。

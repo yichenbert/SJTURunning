@@ -1,4 +1,4 @@
-# SJTU RUN Web 1.0.0
+# SJTURunPlus Web 1.1.0
 
 浏览器入口：**https://yichenbert.github.io/SJTURunning/**
 

@@ -8,7 +8,7 @@ QWidget { font-family: "PingFang SC", "Helvetica Neue", sans-serif; font-size: 1
 QWidget#workspace, QDialog { background: #f4f6f9; }
 QFrame#sidebar { background: #152a36; border: none; }
 QFrame#sidebar QLabel { color: #97b0bb; background: transparent; }
-QFrame#sidebar QLabel#brand { color: white; font-size: 25px; font-weight: 700; letter-spacing: 2px; }
+QFrame#sidebar QLabel#brand { color: white; font-size: 19px; font-weight: 700; letter-spacing: 0px; }
 QFrame#sidebar QLabel#sidebarTitle { color: #eff6f8; font-size: 14px; font-weight: 600; }
 QFrame#sidebar QPushButton { text-align: left; color: #b6cbd4; border: none; background: transparent; padding: 13px 16px; border-radius: 9px; }
 QFrame#sidebar QPushButton:hover { background: #203e4c; color: white; }

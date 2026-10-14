@@ -232,7 +232,7 @@ class RouteMap(QWidget):
             return
         z, x, y = key
         req = QNetworkRequest(QUrl(f'https://tile.openstreetmap.org/{z}/{x}/{y}.png'))
-        req.setRawHeader(b'User-Agent', b'SJTURunningRouteEditor/2.3.0 (+https://github.com/Gnonymous/SJTURunning)')
+        req.setRawHeader(b'User-Agent', b'SJTURunPlusRouteEditor/1.1.0 (+https://github.com/Gnonymous/SJTURunning)')
         req.setTransferTimeout(15000)
         req.setAttribute(QNetworkRequest.Attribute.CacheLoadControlAttribute, QNetworkRequest.CacheLoadControl.PreferCache)
         reply = self.network.get(req)
@@ -442,7 +442,7 @@ class RouteEditorDialog(QDialog):
         super().__init__(parent)
         from src.design import STYLE, card, label
         self.setObjectName('routeEditor')
-        self.setWindowTitle('路线画布 · SJTU RUN')
+        self.setWindowTitle('路线画布 · SJTURunPlus')
         self.resize(1240, 830)
         self.setMinimumSize(980, 670)
         self.setStyleSheet(STYLE)
