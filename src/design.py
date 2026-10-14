@@ -3,55 +3,65 @@ from PySide6.QtWidgets import QFrame, QLabel, QVBoxLayout, QWidget
 from PySide6.QtCore import Qt, QPointF, QRectF
 from PySide6.QtGui import QColor, QPainter, QPainterPath, QPen
 
-STYLE = '''
-QWidget { font-family: "PingFang SC", "Helvetica Neue", sans-serif; font-size: 13px; color: #202c3d; }
-QWidget#workspace, QDialog { background: #f4f6f9; }
-QFrame#sidebar { background: #152a36; border: none; }
-QFrame#sidebar QLabel { color: #97b0bb; background: transparent; }
-QFrame#sidebar QLabel#brand { color: white; font-size: 19px; font-weight: 700; letter-spacing: 0px; }
-QFrame#sidebar QLabel#sidebarTitle { color: #eff6f8; font-size: 14px; font-weight: 600; }
-QFrame#sidebar QPushButton { text-align: left; color: #b6cbd4; border: none; background: transparent; padding: 13px 16px; border-radius: 9px; }
-QFrame#sidebar QPushButton:hover { background: #203e4c; color: white; }
-QFrame#sidebar QPushButton:checked { background: #2b5260; color: #ffffff; font-weight: 600; }
-QFrame#card, QFrame#footer, QFrame#mapPanel { background: white; border: 1px solid #e2e8ee; border-radius: 14px; }
-QFrame#heroCard { background: #ffffff; border: 1px solid #dde8e9; border-radius: 16px; }
+def stylesheet(c):
+    template = '''
+QWidget { font-family: "PingFang SC", "Helvetica Neue", sans-serif; font-size: 13px; color: $ink; }
+QWidget#workspace, QDialog { background: $bg; }
+QFrame#sidebar { background: $sidebar; border: none; border-right: 1px solid $border; }
+QFrame#sidebar QLabel { color: $muted; background: transparent; }
+QFrame#sidebar QLabel#brand { color: $ink; font-size: 19px; font-weight: 600; }
+QFrame#sidebar QLabel#sidebarTitle { font-size: 13px; }
+QFrame#sidebar QPushButton { text-align: left; color: $muted; border: none; background: transparent; padding: 12px 14px; border-radius: 8px; }
+QFrame#sidebar QPushButton:hover, QFrame#sidebar QPushButton:checked { background: $hover; color: $ink; }
+QFrame#card, QFrame#footer, QFrame#mapPanel, QFrame#heroCard { background: $surface; border: 1px solid $border; border-radius: 12px; }
 QLabel { background: transparent; border: none; }
-QLabel#pageTitle { font-size: 28px; font-weight: 700; color: #172f3b; }
-QLabel#summaryValue { font-size: 15px; color: #24394a; font-weight: 500; }
-QComboBox QAbstractItemView { background: white; color: #24394a; selection-background-color: #e5f2f0; selection-color: #087f83; }
-QLabel#cardTitle { font-size: 16px; font-weight: 600; color: #24394a; }
-QLabel#muted { color: #7c8a98; font-size: 12px; }
-QLabel#eyebrow { color: #758c97; font-size: 11px; font-weight: 600; letter-spacing: 1px; }
-QLabel#metric { color: #087f83; font-size: 38px; font-weight: 600; }
-QLabel#routeTitle { color: #203b48; font-size: 21px; font-weight: 600; }
-QLabel#badge { color: #147b74; background: #e6f3ef; padding: 7px 13px; border-radius: 13px; font-size: 12px; }
-QPushButton { background: #ffffff; color: #33485b; border: 1px solid #dce3e9; border-radius: 8px; padding: 9px 15px; min-height: 17px; }
-QPushButton:hover { border-color: #80acae; background: #f1f8f7; }
-QPushButton:pressed { background: #e4f0ef; }
-QPushButton:checked { background: #e5f2f0; color: #087f83; border-color: #9ccac6; }
-QPushButton#primary, QPushButton#startButton, QPushButton#saveRoute { background: #087f83; border: 1px solid #087f83; color: white; font-weight: 600; padding: 10px 19px; }
-QPushButton#primary:hover, QPushButton#startButton:hover, QPushButton#saveRoute:hover { background: #096d70; border-color: #096d70; }
-QPushButton#stopButton { color: #b64d4d; }
-QPushButton:disabled { background: #f0f3f5; border-color: #e6eaf0; color: #a2acb5; }
-QLineEdit, QSpinBox, QDoubleSpinBox, QComboBox { background: #f8fafc; border: 1px solid #dde4eb; border-radius: 7px; padding: 8px 10px; min-height: 19px; color: #233e4c; selection-background-color: #087f83; }
-QLineEdit:focus, QSpinBox:focus, QDoubleSpinBox:focus, QComboBox:focus { border-color: #087f83; background: white; }
-QComboBox::drop-down { border: none; width: 26px; }
+QLabel#pageTitle { font-size: 28px; font-weight: 600; }
+QLabel#cardTitle { font-size: 16px; font-weight: 600; }
+QLabel#summaryValue { font-size: 15px; }
+QLabel#muted { color: $muted; font-size: 12px; }
+QLabel#eyebrow { color: $muted; font-size: 11px; }
+QLabel#metric { font-size: 34px; font-weight: 600; }
+QLabel#editorMetric { font-size: 29px; font-weight: 600; }
+QLabel#routeTitle { font-size: 21px; font-weight: 600; }
+QLabel#badge { color: $muted; background: $subtle; padding: 7px 12px; border-radius: 8px; font-size: 12px; }
+QPushButton { background: $surface; color: $ink; border: 1px solid $border; border-radius: 8px; padding: 9px 14px; min-height: 18px; }
+QPushButton:hover, QPushButton:pressed { background: $hover; }
+QPushButton:checked { background: $soft; color: $accent; border-color: $accent; }
+QPushButton#primary, QPushButton#startButton, QPushButton#saveRoute { background: $ink; border-color: $ink; color: $bg; font-weight: 600; padding: 10px 18px; }
+QPushButton#primary:hover, QPushButton#startButton:hover, QPushButton#saveRoute:hover { background: $muted; border-color: $muted; color: $bg; }
+QPushButton#stopButton { color: $error; }
+QPushButton:disabled { background: $subtle; border-color: $border; color: $muted; }
+QLineEdit, QSpinBox, QDoubleSpinBox, QComboBox, QDateTimeEdit { background: $surface; color: $ink; border: 1px solid $border; border-radius: 7px; padding: 8px 10px; min-height: 19px; selection-background-color: $soft; selection-color: $accent; }
+QLineEdit:focus, QSpinBox:focus, QDoubleSpinBox:focus, QComboBox:focus { border-color: $accent; }
+QComboBox::drop-down { border: none; width: 24px; }
+QComboBox QAbstractItemView { background: $surface; color: $ink; border: 1px solid $border; selection-background-color: $soft; selection-color: $accent; }
 QCheckBox, QRadioButton { spacing: 8px; padding: 3px 0; }
-QCheckBox::indicator { width: 15px; height: 15px; border-radius: 4px; border: 1px solid #c1ced8; background: white; }
-QCheckBox::indicator:checked { background: #087f83; border-color: #087f83; }
-QRadioButton::indicator { width: 15px; height: 15px; border-radius: 8px; border: 1px solid #c1ced8; background: white; }
-QRadioButton::indicator:checked { background: #087f83; border: 3px solid #d7eeeb; }
+QCheckBox::indicator { width: 15px; height: 15px; border-radius: 4px; border: 1px solid $muted; background: $surface; }
+QCheckBox::indicator:checked { background: $accent; border: 3px solid $soft; }
+QRadioButton::indicator { width: 15px; height: 15px; border-radius: 8px; border: 1px solid $muted; background: $surface; }
+QRadioButton::indicator:checked { background: $accent; border: 3px solid $soft; }
 QScrollArea { border: none; background: transparent; }
 QWidget#scrollContent { background: transparent; }
-QScrollBar:vertical { border: none; background: transparent; width: 8px; margin: 3px 0; }
-QScrollBar::handle:vertical { background: #ced9e1; min-height: 35px; border-radius: 4px; }
+QScrollBar:vertical { border: none; background: $subtle; width: 8px; margin: 3px 0; }
+QScrollBar::handle:vertical { background: $border; min-height: 35px; border-radius: 4px; }
 QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical { height: 0; }
 QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical { background: transparent; }
-QTextEdit { background: #f8fafc; color: #34495d; border: 1px solid #e4eaf0; border-radius: 9px; padding: 12px; font-family: "Menlo", monospace; font-size: 12px; }
-QProgressBar { border: none; background: #e9eef2; border-radius: 3px; height: 6px; min-height: 6px; max-height: 6px; }
-QProgressBar::chunk { background: #087f83; border-radius: 3px; }
-QToolTip { background: #203b48; color: white; border: none; padding: 7px; }
+QTextEdit, QListWidget { background: $surface; color: $ink; border: 1px solid $border; border-radius: 9px; padding: 10px; }
+QTextEdit { font-family: "Menlo", monospace; font-size: 12px; }
+QListWidget::item { padding: 12px; border-bottom: 1px solid $border; }
+QListWidget::item:selected { background: $soft; color: $accent; }
+QProgressBar { border: none; background: $subtle; border-radius: 3px; min-height: 6px; max-height: 6px; }
+QProgressBar::chunk { background: $accent; border-radius: 3px; }
+QToolTip { background: $surface; color: $ink; border: 1px solid $border; padding: 7px; }
 '''
+    from string import Template
+    return Template(template).substitute(c)
+
+
+# Kept for callers importing the legacy constant; windows use bind_theme instead.
+from src.appearance import LIGHT, appearance
+STYLE = stylesheet(LIGHT)
+
 
 
 def label(text, role=None, wrap=False):
@@ -91,16 +101,16 @@ class RouteOverview(QWidget):
         painter = QPainter(self)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
         painter.setPen(Qt.PenStyle.NoPen)
-        painter.setBrush(QColor('#f1f7f6'))
+        painter.setBrush(QColor(appearance().colors['subtle']))
         painter.drawRoundedRect(QRectF(self.rect()), 14, 14)
-        painter.setPen(QPen(QColor('#e2eeeb'), 1))
+        painter.setPen(QPen(QColor(appearance().colors['border']), 1))
         for x in range(20, self.width(), 38):
             painter.drawLine(x, 0, x, self.height())
         for y in range(20, self.height(), 38):
             painter.drawLine(0, y, self.width(), y)
         points = self._points
         if len(points) < 2:
-            painter.setPen(QColor('#7b9695'))
+            painter.setPen(QColor(appearance().colors['muted']))
             painter.drawText(self.rect(), Qt.AlignmentFlag.AlignCenter, '绘制你的第一条路线')
             return
         left, top = min(p.x() for p in points), min(p.y() for p in points)
@@ -114,10 +124,10 @@ class RouteOverview(QWidget):
             path.lineTo(point)
         painter.setPen(QPen(QColor('white'), 10, Qt.PenStyle.SolidLine, Qt.PenCapStyle.RoundCap, Qt.PenJoinStyle.RoundJoin))
         painter.drawPath(path)
-        painter.setPen(QPen(QColor('#087f83'), 4, Qt.PenStyle.SolidLine, Qt.PenCapStyle.RoundCap, Qt.PenJoinStyle.RoundJoin))
+        painter.setPen(QPen(QColor(appearance().colors['accent']), 4, Qt.PenStyle.SolidLine, Qt.PenCapStyle.RoundCap, Qt.PenJoinStyle.RoundJoin))
         painter.drawPath(path)
         for point, color in ((pixels[0], '#087f83'), (pixels[-1], '#e4a75b')):
             painter.setPen(QPen(QColor('white'), 3))
             painter.setBrush(QColor(color)); painter.drawEllipse(point, 7, 7)
-        painter.setPen(QColor('#7b9695'))
+        painter.setPen(QColor(appearance().colors['muted']))
         painter.drawText(QRectF(12, self.height()-24, self.width()-24, 20), Qt.AlignmentFlag.AlignRight, '路线轮廓')

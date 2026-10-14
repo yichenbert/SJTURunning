@@ -1,8 +1,12 @@
-# SJTURunPlus Web 1.1.0
+# SJTURunPlus Web 1.2.0
 
 浏览器入口：**https://yichenbert.github.io/SJTURunning/**
 
 Web 版适配手机、平板和电脑，无需安装桌面应用。前端是无构建依赖的 HTML / CSS / JavaScript；可选 Python 服务复用现有业务模块，无需 PySide6。
+
+## 页面外观
+
+右上角「外观」提供跟随系统、日间模式和夜间模式，默认跟随系统并实时响应系统外观变化。手动选择保存在当前浏览器；切回「跟随系统」即可恢复自动切换。主题会覆盖侧栏、表单、弹窗和地图控件；地图底图保留原色，路线坐标不受主题影响。
 
 ## 可以直接使用的功能
 
@@ -71,7 +75,7 @@ docker run --rm --name sjtu-run-web \
 ## 验证
 
 ```sh
-node --test web/tests/core.test.mjs
+node --test web/tests/core.test.mjs web/tests/theme.test.mjs
 python -m unittest discover -s web/tests -v
 ```
 

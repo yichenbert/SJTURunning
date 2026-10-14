@@ -2,6 +2,7 @@
 import json
 import os
 from pathlib import Path
+from src.appearance import bind_theme
 from PySide6.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QComboBox, QLineEdit, QPushButton
 from PySide6.QtGui import QDesktopServices
 from PySide6.QtCore import QUrl
@@ -35,7 +36,7 @@ class MapSettingsDialog(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setWindowTitle('地图来源与设置')
-        self.setStyleSheet(STYLE)
+        bind_theme(self)
         self.resize(540, 490)
         layout = QVBoxLayout(self)
         layout.setContentsMargins(28, 26, 28, 24)

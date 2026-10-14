@@ -52,20 +52,22 @@ class DialogTests(unittest.TestCase):
         self.app.processEvents()
 
     def test_confirmation_dark_system_theme_readable_and_cancel_by_escape(self):
-        old = self.app.palette()
-        dark = QPalette(old)
-        dark.setColor(QPalette.ColorRole.Window,QColor('#303030'))
-        self.app.setPalette(dark)
+        from src.appearance import appearance
+        controller = appearance()
+        old = controller.preference
+        controller.preference = 'system'
+        controller.apply(Qt.ColorScheme.Dark)
         try:
             dialog = SummaryDialog('确认本次提交',[('账号','<test@example.com>'),('日期','2026-10-11')])
             dialog.show();self.app.processEvents()
-            self.assertEqual(dialog.palette().color(QPalette.ColorRole.Window).name(), '#f4f6f9')
+            self.assertEqual(dialog.palette().color(QPalette.ColorRole.Window).name(), '#181818')
             self.assertEqual(dialog.cancel_button.text(),'返回修改')
             self.assertEqual(dialog.confirm_button.text(),'确认并开始')
             QTest.keyClick(dialog,Qt.Key.Key_Escape)
             self.assertEqual(dialog.result(),QDialog.DialogCode.Rejected)
         finally:
-            self.app.setPalette(old)
+            controller.preference = old
+            controller.apply()
 
     def test_map_settings_persist_separately_with_private_permissions(self):
         with tempfile.TemporaryDirectory() as directory, patch('src.map_settings.get_config_path',return_value=str(Path(directory)/'config.json')):

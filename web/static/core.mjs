@@ -1,4 +1,4 @@
-export const VERSION = '1.1.0';
+export const VERSION = '1.2.0';
 export function normalizeRoute(points) {
   if (!Array.isArray(points) || points.length > 5000) throw Error('路线最多支持 5000 个点。');
   const result = [];

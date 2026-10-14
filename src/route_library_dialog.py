@@ -1,3 +1,4 @@
+from src.appearance import bind_theme
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QListWidget, QListWidgetItem, QPushButton, QLineEdit, QFileDialog
 from src.design import STYLE, label, RouteOverview
@@ -12,14 +13,13 @@ class RouteLibraryDialog(QDialog):
         super().__init__(parent)
         self.library = library or RouteLibrary()
         self.setWindowTitle('我的路线')
-        self.setStyleSheet(STYLE)
+        bind_theme(self)
         self.resize(760, 560)
         layout = QVBoxLayout(self);layout.setContentsMargins(26,24,26,24);layout.setSpacing(14)
         layout.addWidget(label('我的路线', 'pageTitle'))
         layout.addWidget(label('选择已保存的路线，预览后直接调用。', 'muted'))
         body = QHBoxLayout()
         self.list = QListWidget();self.list.setMinimumWidth(280)
-        self.list.setStyleSheet('QListWidget {background:white; border:1px solid #dde4eb;border-radius:10px;} QListWidget::item {padding:14px;border-bottom:1px solid #edf1f5;} QListWidget::item:selected {background:#e5f2f0;color:#087f83;}')
         body.addWidget(self.list,1)
         preview = QVBoxLayout();self.overview=RouteOverview();preview.addWidget(self.overview,1)
         self.details=label('还没有保存的路线', 'muted', True);preview.addWidget(self.details)

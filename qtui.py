@@ -1,3 +1,4 @@
+from src.appearance import bind_theme, appearance
 import sys
 import os
 import re
@@ -5,9 +6,9 @@ from PySide6.QtWidgets import (
     QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit,
     QPushButton, QTextEdit, QProgressBar, QFormLayout, QGroupBox, QDateTimeEdit,
     QMessageBox, QScrollArea, QSizePolicy, QCheckBox, QSpinBox, QDoubleSpinBox,
-    QSpacerItem, QRadioButton, QButtonGroup, QFrame, QDialog, QStackedWidget
+    QSpacerItem, QRadioButton, QButtonGroup, QFrame, QDialog, QStackedWidget, QComboBox
 )
-from PySide6.QtCore import QThread, Signal, QDateTime, Qt, QUrl, QEvent, QTimer
+from PySide6.QtCore import QThread, Signal, QDateTime, Qt, QUrl, QEvent, QTimer, QSignalBlocker
 from PySide6.QtGui import QTextCursor, QFont, QColor, QTextCharFormat, QPalette, QBrush, QIcon, QDesktopServices
 
 from src.main import run_sports_upload
@@ -91,8 +92,9 @@ class SportsUploaderUI(QWidget):
         self._auto_save_timer.setSingleShot(True)
         self._auto_save_timer.setInterval(500)
         self._auto_save_timer.timeout.connect(self._auto_save_config)
-        self.setStyleSheet(STYLE)
+        bind_theme(self)
         self.init_ui()
+        appearance().changed.connect(self._appearance_changed)
         self.resize(1160, 880)
         self.setMinimumSize(960, 700)
         screen = QApplication.primaryScreen()
@@ -178,6 +180,13 @@ class SportsUploaderUI(QWidget):
         title.addWidget(self.page_subtitle)
         header.addLayout(title)
         header.addStretch()
+        self.theme_box = QComboBox()
+        self.theme_box.setAccessibleName('外观模式')
+        for text, mode in (('跟随系统', 'system'), ('日间模式', 'light'), ('夜间模式', 'dark')):
+            self.theme_box.addItem(text, mode)
+        self.theme_box.setCurrentIndex(self.theme_box.findData(appearance().preference))
+        self.theme_box.currentIndexChanged.connect(lambda: appearance().set_preference(self.theme_box.currentData()))
+        header.addWidget(self.theme_box)
         header.addWidget(label('配置自动保存', 'badge'))
         main.addLayout(header)
         self.pages = QStackedWidget()
@@ -629,14 +638,8 @@ class SportsUploaderUI(QWidget):
         cursor.movePosition(QTextCursor.End)
 
         format = QTextCharFormat()
-        if level == "error":
-            format.setForeground(QColor("#DC3545"))
-        elif level == "warning":
-            format.setForeground(QColor("#FFA500"))
-        elif level == "success":
-            format.setForeground(QColor("#4CAF50"))
-        else:
-            format.setForeground(QColor("#333333"))
+        colors = appearance().colors
+        format.setForeground(QColor(colors.get(level, colors['ink'])))
 
         # 如果是进度类短消息（例如: 已完成1/25），尝试替换最后一行以便在同一行更新
         try:
@@ -659,6 +662,22 @@ class SportsUploaderUI(QWidget):
 
         cursor.insertText(f"[{level.upper()}] {message}\n", format)
         self.log_output_area.ensureCursorVisible()
+
+    def _appearance_changed(self):
+        with QSignalBlocker(self.theme_box):
+            self.theme_box.setCurrentIndex(self.theme_box.findData(appearance().preference))
+        # Rich text keeps explicit colors, so recolor existing logs as well as new ones.
+        colors = appearance().colors
+        block = self.log_output_area.document().begin()
+        while block.isValid():
+            match = re.match(r"\[(INFO|ERROR|WARNING|SUCCESS)\]", block.text())
+            level = match.group(1).lower() if match else 'info'
+            cursor = QTextCursor(block)
+            cursor.movePosition(QTextCursor.MoveOperation.EndOfBlock, QTextCursor.MoveMode.KeepAnchor)
+            fmt = QTextCharFormat()
+            fmt.setForeground(QColor(colors.get(level, colors['ink'])))
+            cursor.mergeCharFormat(fmt)
+            block = block.next()
 
     def upload_finished(self, success, message):
         """上传任务完成后的处理"""
@@ -700,7 +719,7 @@ class SportsUploaderUI(QWidget):
         dialog.setObjectName('aboutDialog')
         dialog.setWindowTitle('关于 SJTURunPlus')
         dialog.resize(520, 360)
-        dialog.setStyleSheet(STYLE)
+        bind_theme(dialog)
         layout = QVBoxLayout(dialog)
         layout.setContentsMargins(30, 28, 30, 25)
         layout.setSpacing(15)

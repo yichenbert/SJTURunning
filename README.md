@@ -1,14 +1,16 @@
-# SJTURunPlus · 路线工作台 1.1.0
+# SJTURunPlus · 路线工作台 1.2.0
 
 # **你跑不过我你信吗**
 
 基于 [Gnonymous/SJTURunning](https://github.com/Gnonymous/SJTURunning) 整理的独立桌面版本，采用 Python 与 PySide6，保留上游 MIT 许可证。
 
-![主界面](packaging/1.1主界面.png)
+![日间主界面](packaging/1.2主界面-light.png)
+
+![夜间主界面](packaging/1.2主界面-dark.png)
 
 ## 功能
 
-- 浅色工作台：统一管理账号、日期、配速、路线及运行日志。
+- 简洁工作台：统一管理账号、日期、配速、路线及运行日志，支持日间、夜间和跟随系统外观。
 - 地图路线编辑：点选、手绘、撤销、缩放与触控板平移。
 - 地图切换：OpenStreetMap 无需密钥；高德地图需自行配置 JS API Key 与安全密钥。
 - 本地路线库：保存、重命名、导入、导出和再次调用，原子写入保护已有数据。
@@ -50,7 +52,7 @@ pip install pyinstaller
 python -m PyInstaller --noconfirm --clean packaging/SJTURunning.spec
 ```
 
-本地 43 项离线单元与 GUI 事件测试通过。测试涉及坐标转换、路线采样、地图交互、配置和路线库；未验证真实账号登录、真实提交、高德在线鉴权或成绩认定。详见 [验证结果](packaging/验证结果.md)。macOS 本机重建可运行 `packaging/build-macos.sh`。
+本地 47 项桌面离线单元与 GUI 事件测试通过；Web 前端 10 项、模拟服务 7 项测试通过。测试涉及坐标转换、路线采样、地图交互、配置和路线库；未验证真实账号登录、真实提交、高德在线鉴权或成绩认定。详见 [1.2.0 验证结果](packaging/1.2验证结果.md)。macOS 本机重建可运行 `packaging/build-macos.sh`。
 
 ## 源码参考与作者
 
@@ -61,6 +63,6 @@ python -m PyInstaller --noconfirm --clean packaging/SJTURunning.spec
 - 三改维护及本版直接参考仓库：[Gnonymous](https://github.com/Gnonymous) / [SJTURunning](https://github.com/Gnonymous/SJTURunning)
 - 本版整理与发布：[yichenbert](https://github.com/yichenbert)
 
-参考基础提交：`9938d0d58569eaa3a9c3ede8bb85780bf73140de`（上游 2.1.1）。本仓库将本地界面与地图改动整合为独立发行版 **1.1.0**，版本序列与上游分别维护。
+参考基础提交：`9938d0d58569eaa3a9c3ede8bb85780bf73140de`（上游 2.1.1）。本仓库将本地界面与地图改动整合为独立发行版 **1.2.0**，版本序列与上游分别维护。
 
 采用 [MIT License](LICENSE)，保留原许可证的 Copyright (c) 2025 Yuhan Guo丨Eohan。请遵守学校及服务平台的相关规定。

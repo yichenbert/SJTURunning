@@ -3,7 +3,7 @@ import os
 import shutil
 import sys
 
-global_version = "1.1.0"
+global_version = "1.2.0"
 
 APP_NAME = "SJTURunPlus"
 # Retain the existing data directory so upgrades preserve settings and routes.

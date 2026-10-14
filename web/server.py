@@ -21,7 +21,7 @@ from src import login
 from src.main import run_sports_upload
 from utils.auxiliary_util import SportsUploaderError
 
-VERSION = '1.1.0'
+VERSION = '1.2.0'
 STATIC = Path(__file__).parent / 'static'
 ALLOWED_FILES = {'index.html', 'style.css', 'app.mjs', 'core.mjs', 'icon.svg', 'icon.png', 'icon-192.png', 'icon-512.png', 'manifest.webmanifest', 'sw.js', 'LICENSE.txt'}
 MIME = {'.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.mjs': 'text/javascript; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.svg': 'image/svg+xml', '.webmanifest': 'application/manifest+json'}

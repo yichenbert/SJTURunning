@@ -1,4 +1,5 @@
 """Predictable, readable dialogs in both macOS appearance modes."""
+from src.appearance import bind_theme
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QPushButton, QScrollArea, QWidget
 from src.design import STYLE, card, label
@@ -9,7 +10,7 @@ class SummaryDialog(QDialog):
         super().__init__(parent)
         self.setObjectName('summaryDialog')
         self.setWindowTitle(title)
-        self.setStyleSheet(STYLE)
+        bind_theme(self)
         self.resize(540, 620)
         layout = QVBoxLayout(self)
         layout.setContentsMargins(28, 26, 28, 24)

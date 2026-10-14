@@ -4,6 +4,7 @@ import math
 from collections import OrderedDict
 from pathlib import Path
 
+from src.appearance import bind_theme, appearance
 from PySide6.QtCore import QPointF, QRectF, Qt, QUrl, Signal, QTimer, QPoint, QEvent, QSignalBlocker
 from PySide6.QtGui import QColor, QPainter, QPainterPath, QPen, QPixmap, QShortcut, QKeySequence
 from PySide6.QtNetwork import QNetworkAccessManager, QNetworkDiskCache, QNetworkReply, QNetworkRequest
@@ -311,13 +312,13 @@ class RouteMap(QWidget):
                 painter.setPen(QPen(QColor('white'), 2))
                 painter.setBrush(QColor(color))
                 painter.drawEllipse(point, 12, 12)
-                painter.setPen(QColor('white'))
+                painter.setPen(QColor('#563300' if text == '终' else 'white'))
                 painter.drawText(QRectF(point.x()-12, point.y()-12, 24, 24), Qt.AlignmentFlag.AlignCenter, text)
             painter.restore()
         painter.setPen(Qt.PenStyle.NoPen)
-        painter.setBrush(QColor(255, 255, 255, 230))
+        painter.setBrush(QColor(appearance().colors['surface']))
         painter.drawRoundedRect(QRectF(self.width()-236, self.height()-30, 226, 24), 5, 5)
-        painter.setPen(QColor('#566d75'))
+        painter.setPen(QColor(appearance().colors['muted']))
         painter.drawText(QRectF(self.width()-234, self.height()-29, 222, 22), Qt.AlignmentFlag.AlignCenter, '© OpenStreetMap contributors')
 
     def showEvent(self, event):
@@ -445,7 +446,7 @@ class RouteEditorDialog(QDialog):
         self.setWindowTitle('路线画布 · SJTURunPlus')
         self.resize(1240, 830)
         self.setMinimumSize(980, 670)
-        self.setStyleSheet(STYLE)
+        bind_theme(self)
         layout = QVBoxLayout(self)
         layout.setContentsMargins(26, 22, 26, 20)
         layout.setSpacing(18)
@@ -488,7 +489,7 @@ class RouteEditorDialog(QDialog):
         tools.addSpacing(8)
         tools.addWidget(label('路线长度', 'eyebrow'))
         self.stats = label('0.000 公里', 'metric')
-        self.stats.setStyleSheet('font-size: 31px; color: #087f83; font-weight: 600;')
+        self.stats.setObjectName('editorMetric')
         tools.addWidget(self.stats)
         self.route_details = label('尚未添加节点', 'muted', True)
         tools.addWidget(self.route_details)
